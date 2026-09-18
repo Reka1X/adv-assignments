@@ -1,48 +1,74 @@
-from ac import AirConditioner
+class AirConditioner:
+    """A room air-conditioner. Reported buggy by the QA team - fix it!"""
 
-results = []
-def check(name, fn):
-    try:
-        fn(); results.append((name, True, ""))
-    except AssertionError as e:
-        results.append((name, False, str(e) or "assertion failed"))
-    except Exception as e:
-        results.append((name, False, f"{type(e).__name__}: {e}"[:80]))
+    VALID_MODES = ("cool", "fan", "dry", "auto")
+    MIN_TEMP = 16
+    MAX_TEMP = 30
 
-def c1():
-    ac = AirConditioner("Daikin", "Bedroom")
-    assert "Bedroom" in str(ac)
-check("1. Builds and __str__ works", c1)
+    def __init__(self, brand, room_name, temperature=25, mode="cool", fan_speed=1):
+        self.brand = brand
+        self.room_name = room_name
+        self.is_on = False
 
-def c2():
-    ac = AirConditioner("Daikin", "Bedroom"); ac.temperature = 22
-    assert ac.temperature == 22
-check("2. A valid temperature is stored", c2)
+        self.temperature = temperature
+        self.mode = mode
+        self.fan_speed = fan_speed
 
-def c3():
-    ac = AirConditioner("Daikin", "Bedroom")
-    ac.temperature = 22; assert ac.is_energy_saving is False
-    ac.temperature = 26; assert ac.is_energy_saving is True
-check("3. is_energy_saving reflects the CURRENT temperature", c3)
+    @property
+    def temperature(self):
+        return self._temperature
 
-def c4():
-    ac = AirConditioner("Daikin", "Bedroom")
-    for bad in (5, 40):
-        try: ac.temperature = bad; assert False, f"accepted {bad}"
-        except ValueError: pass
-check("4. Out-of-range temperature is rejected", c4)
+    @temperature.setter
+    def temperature(self, value):
+        if value < self.MIN_TEMP or value > self.MAX_TEMP:
+            raise ValueError(
+                f"Temperature must be {self.MIN_TEMP}-{self.MAX_TEMP} C."
+            )
+        self._temperature = value
 
-def c5():
-    try: AirConditioner("LG", "Office", temperature=99); assert False, "ctor accepted 99"
-    except ValueError: pass
-check("5. The constructor also rejects bad values", c5)
+    @property
+    def mode(self):
+        return self._mode
 
-def c6():
-    ac = AirConditioner("Daikin", "Bedroom", temperature=16)
-    ac.cooler(); assert ac.temperature == 16
-check("6. cooler() never drops below the minimum", c6)
+    @mode.setter
+    def mode(self, value):
+        if value not in self.VALID_MODES:
+            raise ValueError(f"Mode must be one of {self.VALID_MODES}.")
+        self._mode = value
 
-passed = sum(1 for _, ok, _ in results if ok)
-for name, ok, msg in results:
-    print(f"[{'PASS' if ok else 'FAIL'}] {name}" + (f"   -> {msg}" if not ok else ""))
-print(f"\n{passed}/{len(results)} checks passing")
+    @property
+    def fan_speed(self):
+        return self._fan_speed
+
+    @fan_speed.setter
+    def fan_speed(self, value):
+        if value not in (1, 2, 3):
+            raise ValueError(
+                "Fan speed must be 1 (low), 2 (medium) or 3 (high)."
+            )
+        self._fan_speed = value
+
+    @property
+    def is_energy_saving(self):
+        return self.temperature >= 25
+
+    def turn_on(self):
+        self.is_on = True
+
+    def turn_off(self):
+        self.is_on = False
+
+    def cooler(self):
+        if self.temperature > self.MIN_TEMP:
+            self.temperature -= 1
+
+    def warmer(self):
+        if self.temperature < self.MAX_TEMP:
+            self.temperature += 1
+
+    def __str__(self):
+        power = "ON" if self.is_on else "OFF"
+        return (
+            f"{self.brand} AC in {self.room_name}: {power}, "
+            f"{self.temperature}C, mode={self.mode}, fan={self.fan_speed}"
+        )
