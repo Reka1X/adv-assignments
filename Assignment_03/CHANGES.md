@@ -34,8 +34,7 @@ Record **every** prompt where AI helped. If you wrote a part yourself, say so in
 
 | # | My prompt to the AI | What it suggested (summary) | Accept / reject / edited | How I checked it |
 |---|---|---|---|---|
-| 1 |Can you help me do this OOP Python assignment one by one? I want to understand how to refactor the code.  | AI explained the main OOP requirements and suggested starting with named constants. | requirements and suggested starting with named constants.
-Accepted | I compared the suggested constants with the original code. |
+| 1 |Can you help me do this OOP Python assignment one by one? I want to understand how to refactor the code.  | AI explained the main OOP requirements and suggested starting with named constants. |Accepted | I compared the suggested constants with the original code. |
 | 2 | For OOP in Python, how should I change the product tuples into a Product class? | AI suggested creating a Product class with attributes such as name, price, and category. | Edited | I checked that the class stored the same product information as the original tuples. |
 | 3 | How can I use encapsulation in the Product and OrderItem classes for this assignment? | AI suggested using class attributes and validation in the constructors. | Edited | I checked the validation rules against the assignment requirements. |
 | 4 | What is the best way to make an OrderItem class that contains a Product object and quantity? | AI suggested composition, where OrderItem contains a Product object and calculates the line total and tax. | Accepted | I tested the calculations using the original product prices and quantities. |
