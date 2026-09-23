@@ -48,7 +48,7 @@ Record **every** prompt where AI helped. If you wrote a part yourself, say so in
 
 ---
 
-## 4 · Before-you-submit checklist
+## 4 · checklist
 
 - [ ] `python Assignment_03.py` prints **PASS**.
 - [ ] No tuples / parallel lists left — products, orders, and items are objects.
